@@ -7,8 +7,10 @@ export class App extends Component {
   handleChange = (event) => {
     this.setState({ text: event.target.value });
   };
-  handleSubmit = (event) => {
+  onFormSubmit = (event) => {
     event.preventDefault();
+  };
+  onSubmitButtonClick = () => {
     this.setState({
       todo: [...this.state.todo, { name: this.state.text, id: Math.random() }],
       text: "",
@@ -26,7 +28,7 @@ export class App extends Component {
       return (
         <div style={{ marginTop: "25px" }} className="ui container">
           <h2 style={{ textAlign: "center" }}>Todo List</h2>
-          <form onSubmit={this.handleSubmit}>
+          <form onSubmit={this.onFormSubmit}>
             <div className="ui action fluid input">
               <input
                 type="text"
@@ -34,7 +36,16 @@ export class App extends Component {
                 onChange={this.handleChange}
                 value={this.state.text}
               />
-              <button className="ui button primary">Add Item</button>
+              {this.state.text === "" ? (
+                <button className="ui button disabled">Add Item</button>
+              ) : (
+                <button
+                  onClick={this.onSubmitButtonClick}
+                  className="ui button primary"
+                >
+                  Add Item
+                </button>
+              )}
             </div>
           </form>
 
@@ -75,7 +86,11 @@ export class App extends Component {
                 onChange={this.handleChange}
                 value={this.state.text}
               />
-              <button className="ui button primary">Add Item</button>
+              {this.state.text === "" ? (
+                <button className="ui button disabled">Add Item</button>
+              ) : (
+                <button className="ui button primary">Add Item</button>
+              )}
             </div>
           </form>
         </div>
