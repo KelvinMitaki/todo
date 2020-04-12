@@ -1,30 +1,26 @@
 import React, { Component } from "react";
+import {
+  handleChangeAction,
+  handleSubmitAction,
+  handleDeleteAction,
+} from "../actions";
+import { connect } from "react-redux";
 export class App extends Component {
-  state = {
-    todo: [],
-    text: "",
-  };
   handleChange = (event) => {
-    this.setState({ text: event.target.value });
+    this.props.handleChangeAction(event.target.value);
   };
   onFormSubmit = (event) => {
     event.preventDefault();
   };
   onSubmitButtonClick = () => {
-    this.setState({
-      todo: [...this.state.todo, { name: this.state.text, id: Math.random() }],
-      text: "",
-    });
+    this.props.handleSubmitAction(this.props.text);
   };
   onDeleteClick = (id) => {
-    const newTodos = this.state.todo.filter((item) => item.id !== id);
-    this.setState({ todo: newTodos });
+    this.props.handleDeleteAction(id);
   };
-  onEditClick = (value) => {
-    this.setState({ text: value });
-  };
+  onEditClick = (value) => {};
   render() {
-    if (this.state.todo) {
+    if (this.props.todo) {
       return (
         <div style={{ marginTop: "25px" }} className="ui container">
           <h2 style={{ textAlign: "center" }}>Todo List</h2>
@@ -34,9 +30,9 @@ export class App extends Component {
                 type="text"
                 placeholder="Add Item..."
                 onChange={this.handleChange}
-                value={this.state.text}
+                value={this.props.text}
               />
-              {this.state.text === "" ? (
+              {this.props.text === "" ? (
                 <button className="ui button disabled">Add Item</button>
               ) : (
                 <button
@@ -50,7 +46,7 @@ export class App extends Component {
           </form>
 
           <div className="ui celled list">
-            {this.state.todo.map((item) => {
+            {this.props.todo.map((item) => {
               return (
                 <div className="item" key={item.id}>
                   <div className="right floated content">
@@ -84,9 +80,9 @@ export class App extends Component {
                 type="text"
                 placeholder="Add Item..."
                 onChange={this.handleChange}
-                value={this.state.text}
+                value={this.props.text}
               />
-              {this.state.text === "" ? (
+              {this.props.text === "" ? (
                 <button className="ui button disabled">Add Item</button>
               ) : (
                 <button className="ui button primary">Add Item</button>
@@ -98,5 +94,15 @@ export class App extends Component {
     }
   }
 }
+const mapStateToProps = (state) => {
+  return {
+    text: state.todo.text,
+    todo: state.todo.todo,
+  };
+};
 
-export default App;
+export default connect(mapStateToProps, {
+  handleChangeAction,
+  handleSubmitAction,
+  handleDeleteAction,
+})(App);
